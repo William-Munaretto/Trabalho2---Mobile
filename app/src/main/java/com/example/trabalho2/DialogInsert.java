@@ -2,10 +2,13 @@ package com.example.trabalho2;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,12 +24,9 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
 
     private EditText edtItem;
     private Adapter adapter;
-    private ArrayList<String> itens;
+    private String item;
+    private onItemClickListener listener;
 
-
-    public ArrayList<String> getItens() {
-        return itens;
-    }
 
     @NonNull
     @Override
@@ -48,14 +48,12 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
 
     @Override
     public void onClick(DialogInterface dialog, int i) {
-        String item = edtItem.getText().toString();
 
-        if(i == DialogInterface.BUTTON_POSITIVE){
-            itens.add(item);
-            adapter.notifyDataSetChanged();
+        if (i == DialogInterface.BUTTON_POSITIVE) {
+            item = edtItem.getText().toString();
+            listener.onItem(item);
             Toast.makeText(getActivity(), R.string.adicionado, Toast.LENGTH_LONG).show();
-        }
-        else if(i == DialogInterface.BUTTON_NEGATIVE) {
+        } else if (i == DialogInterface.BUTTON_NEGATIVE) {
 
             Toast.makeText(getActivity(), R.string.Cancelado, Toast.LENGTH_LONG).show();
 
@@ -63,5 +61,25 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (onItemClickListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + "implementar o listener na MainActivity");
+        }
+
+    }
+
+    public interface onItemClickListener{
+        public void onItem(String item);
+    }
+
 
 }
+
+
+
+
+
