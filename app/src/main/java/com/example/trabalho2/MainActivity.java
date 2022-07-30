@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -12,7 +13,7 @@ import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements DialogInsert.onItemClickListener {
 
-    private Adapter adapter;
+    private Adapter adapter = new Adapter(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements DialogInsert.onIt
 
 
         ListView listView = (ListView) findViewById(R.id.lista);
-        listView.setAdapter(new Adapter(this));
+        listView.setAdapter(adapter);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements DialogInsert.onIt
 
     @Override
     public void onItem(String item) {
+        Log.i(item, "item main");
         adapter.insertItem(item);
     }
 }

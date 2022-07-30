@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +28,7 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
     private Adapter adapter;
     private String item;
     private onItemClickListener listener;
+    private boolean insertMode;
 
 
     @NonNull
@@ -51,7 +54,11 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
 
         if (i == DialogInterface.BUTTON_POSITIVE) {
             item = edtItem.getText().toString();
-            listener.onItem(item);
+            Log.i(item, "item dialog");
+            if(!TextUtils.isEmpty(item)){
+                listener.onItem(item);
+//                insertMode = true;
+            }
             Toast.makeText(getActivity(), R.string.adicionado, Toast.LENGTH_LONG).show();
         } else if (i == DialogInterface.BUTTON_NEGATIVE) {
 
@@ -64,16 +71,19 @@ public class DialogInsert extends DialogFragment implements DialogInterface.OnCl
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        try {
+        if(context instanceof onItemClickListener){
             listener = (onItemClickListener) context;
-        }catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + "implementar o listener na MainActivity");
         }
-
+        else{
+            throw new RuntimeException("A activity deve " +
+                    "implementar o listener");
+        }
     }
+
 
     public interface onItemClickListener{
         public void onItem(String item);
+
     }
 
 
